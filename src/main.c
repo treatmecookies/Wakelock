@@ -122,9 +122,11 @@ int main(void)
     }
 
     WNDCLASS wc = {
-        .lpfnWndProc   = W_Window_Proc,
-        .hInstance     = hInstance,
-        .hIcon         = W_EXECUTION_ICONS[W_EXECUTION_DISPLAY_REQUIRED], /* Use bright screen for task manager icon. */
+        .lpfnWndProc = W_Window_Proc,
+        .hInstance   = hInstance,
+        .hIcon       = W_EXECUTION_ICONS[W_EXECUTION_DISPLAY_REQUIRED], /* Use bright screen
+                                                                           for task manager
+                                                                           icon. */
         .lpszClassName = TEXT("Wakelock-MSG"),
     };
 
@@ -183,9 +185,9 @@ static LRESULT CALLBACK W_Window_Proc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM
         if (lParam == WM_LBUTTONUP)
         {
             W_Window_SetMode(hWnd, (W_CURRENT_EXECUTION + 1) % W_EXECUTION_COUNT);
+            return 0;
         }
-
-        if (lParam == WM_RBUTTONUP)
+        else if (lParam == WM_RBUTTONUP)
         {
             HMENU menu = CreatePopupMenu();
 
@@ -249,7 +251,6 @@ static LRESULT CALLBACK W_Window_Proc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM
             if (!GetCursorPos(&point))
             {
                 W_LOG("GetCursorPos failed.\n");
-                DestroyMenu(startup);
                 DestroyMenu(menu);
                 return 0;
             }
@@ -260,9 +261,9 @@ static LRESULT CALLBACK W_Window_Proc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM
             PostMessage(hWnd, WM_NULL, 0, 0);
 
             DestroyMenu(menu);
-        }
 
-        return 0;
+            return 0;
+        }
     }
     else if (Msg == WM_COMMAND)
     {
@@ -316,14 +317,13 @@ static LRESULT CALLBACK W_Window_Proc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM
             return 0;
         }
     }
-
-    if (Msg == WM_CREATE)
+    else if (Msg == WM_CREATE)
     {
         NOTIFYICONDATA notify = {
             .cbSize           = sizeof(notify),
             .hWnd             = hWnd,
             .uID              = 0,
-            .uFlags           = NIF_ICON | NIF_TIP | NIF_MESSAGE,
+            .uFlags           = NIF_ICON | NIF_TIP | NIF_SHOWTIP | NIF_MESSAGE,
             .hIcon            = W_EXECUTION_ICONS[W_CURRENT_EXECUTION],
             .uCallbackMessage = W_MESSAGE_ID_TRAY,
         };
@@ -341,8 +341,7 @@ static LRESULT CALLBACK W_Window_Proc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM
 
         return 0;
     }
-
-    if (Msg == WM_DESTROY)
+    else if (Msg == WM_DESTROY)
     {
         NOTIFYICONDATA notify = {
             .cbSize = sizeof(notify),
@@ -368,7 +367,7 @@ restore:
         .cbSize           = sizeof(notify),
         .hWnd             = hWnd,
         .uID              = 0,
-        .uFlags           = NIF_ICON | NIF_TIP | NIF_MESSAGE,
+        .uFlags           = NIF_ICON | NIF_TIP | NIF_SHOWTIP | NIF_MESSAGE,
         .hIcon            = W_EXECUTION_ICONS[execution],
         .uCallbackMessage = W_MESSAGE_ID_TRAY,
     };
