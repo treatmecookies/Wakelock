@@ -164,7 +164,7 @@ int main(void)
     }
 }
 
-int __stdcall WinMainCRTStartup(void)
+int __stdcall W_CRT_Entry(void)
 {
     __security_init_cookie();
     ExitProcess(main());

@@ -215,6 +215,7 @@ cl ^
     %EXTRA_ARGS% ^
     /link ^
     /SUBSYSTEM:WINDOWS ^
+    /ENTRY:W_CRT_Entry ^
     /NODEFAULTLIB ^
     kernel32.lib ^
     user32.lib ^
